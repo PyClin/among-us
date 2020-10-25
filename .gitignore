@@ -1,0 +1,10 @@
+# Environments
+# .env # meh its just a hack
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+#IDE
+.vscode

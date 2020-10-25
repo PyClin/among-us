@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+
+  db:
+    image: "neo4j:latest"
+    restart: "always"
+    ports:
+      - $DB_PORT:$DB_PORT
+      - $VIS_PORT:$VIS_PORT
+    volumes:
+      - $HOME/neo4j/data:/data
+      - $HOME/neo4j/logs:/logs
+      - $HOME/neo4j/import:/var/lib/neo4j/import
+      - $HOME/neo4j/plugins:/plugins
+    environment:
+      NEO4J_AUTH: $NEO4J_AUTH_USERNAME/$NEO4J_AUTH_PASSWORD
+    networks: 
+      - back
+      
+
+  api:
+    image: "among-us-neo4j:latest"
+    restart: "always"
+    environment: 
+      - LISTEN_PORT=$NGINX_PORT
+    ports: 
+      - $NGINX_PORT:$NGINX_PORT
+    depends_on: 
+      - db
+    networks: 
+      - back
+    links: 
+      - db:db
+
+networks:
+  back:
