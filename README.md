@@ -172,3 +172,51 @@ MATCH (n:User)-[r:SIMILAR]-(:User) RETURN n
 MATCH (n:User)-[r:SIMILAR]-(:User) WHERE r.conf > 0.8 RETURN n
 ```
 
+* show all verified tweets from every user account
+
+```
+MATCH (n:User)-[r:VERIFIED]-(t:Tweet) RETURN n, r, t
+```
+
+* show all verified tweets from one user account (usecase 1)
+
+```
+MATCH (n:User {name: "yaswant"})-[r:VERIFIED]-(t:Tweet) RETURN n, r, t
+```
+
+* show all verified+unverfied tweets from that one particular user account
+
+```
+MATCH (n:User {name: "yaswant"})-[:VERIFIED|:UNVERIFIED]-(t:Tweet) RETURN n, t
+```
+
+* show all verfied-flagged tweets from partciular User
+
+```
+MATCH (n:User {name:"shaaran"})-[:VERIFIED]-(t:Tweet {flagged:true}) RETURN n, t
+```
+
+* for a user, find all his flagged tweets and similar users to that user
+
+```
+MATCH (n:User {name:"shaaran"})-[:VERIFIED]-(t:Tweet {flagged:true}) 
+MATCH (u:User)-[:USER_SIMILAR]-(n)
+RETURN n, t, u
+```
+
+* for a particular verfied-tweet from the legit User, find other simlar users. (usecase 2)
+
+```
+MATCH (t:Tweet {tweet_id:"890"})-[:VERIFIED]-(u:User) 
+MATCH (n:User)-[:USER_SIMILAR]-(u)
+RETURN n, t, u
+```
+
+* for a particular unverfied-tweet, show the hacked user account and who is the impostor responsible
+for that particular unverified-tweet. (usecase 3)
+
+```
+MATCH (t:Tweet {tweet_id:"456"})-[r1:UNVERIFIED]-(u1:User)
+MATCH (t)-[r2:TWEET_SIMILAR]-(u2:User)
+RETURN t, r1, u1, r2, u2
+```
